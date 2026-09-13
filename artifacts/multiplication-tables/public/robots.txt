@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /play
+Disallow: /results
+Disallow: /creator
+Disallow: /sign-in
+Sitemap: https://table-wars.com/sitemap.xml

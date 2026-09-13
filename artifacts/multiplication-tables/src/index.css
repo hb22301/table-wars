@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Mono:wght@400;500&display=swap');
+@layer theme, base, clerk, components, utilities;
+@import 'tailwindcss';
+@import '@clerk/themes/shadcn.css';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --background: 37 100% 96%;
+  --foreground: 256 25% 20%;
+  --border: 256 17% 82%;
+  --input: 256 17% 82%;
+  --ring: 11 84% 60%;
+  --card: 39 100% 99%;
+  --card-foreground: 256 25% 20%;
+  --card-border: 37 40% 88%;
+  --primary: 11 84% 60%;
+  --primary-foreground: 39 100% 99%;
+  --secondary: 163 54% 82%;
+  --secondary-foreground: 167 45% 20%;
+  --muted: 36 47% 90%;
+  --muted-foreground: 256 12% 46%;
+  --accent: 45 100% 70%;
+  --accent-foreground: 256 25% 20%;
+  --destructive: 347 73% 52%;
+  --destructive-foreground: 39 100% 99%;
+  --app-font-sans: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  --app-font-mono: 'DM Mono', ui-monospace, monospace;
+  --radius: 1.15rem;
+  --button-outline: rgba(48, 39, 61, .12);
+  --elevate-1: rgba(48, 39, 61, .05);
+  --elevate-2: rgba(48, 39, 61, .1);
+}
+
+.dark {
+  --background: 256 24% 12%;
+  --foreground: 39 100% 96%;
+  --border: 256 16% 30%;
+  --input: 256 16% 30%;
+  --card: 256 22% 17%;
+  --card-foreground: 39 100% 96%;
+  --card-border: 256 16% 30%;
+  --primary: 11 84% 62%;
+  --primary-foreground: 39 100% 99%;
+  --secondary: 163 42% 28%;
+  --secondary-foreground: 163 54% 87%;
+  --muted: 256 16% 24%;
+  --muted-foreground: 36 20% 70%;
+  --accent: 45 90% 58%;
+  --accent-foreground: 256 25% 20%;
+  --destructive: 347 73% 58%;
+  --destructive-foreground: 39 100% 99%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply font-sans antialiased bg-background text-foreground; }
+}
+
+body { min-width: 320px; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.answer-input { -moz-appearance: textfield; appearance: textfield; }
+.answer-input::-webkit-inner-spin-button,
+.answer-input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
+.board-bg {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(255, 214, 107, .52), transparent 25rem),
+    radial-gradient(circle at 2% 85%, rgba(185, 242, 208, .45), transparent 24rem),
+    hsl(var(--background));
+}
+.dark .board-bg {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(255, 214, 107, .14), transparent 25rem),
+    radial-gradient(circle at 2% 85%, rgba(185, 242, 208, .12), transparent 24rem),
+    hsl(var(--background));
+}
+
+/* The app uses expressive color utilities for its light palette. Re-map those
+   surfaces and labels in dark mode so the same hierarchy stays readable. */
+.dark [class*="bg-[#fffdf9]"] { background-color: #292331 !important; }
+.dark [class*="bg-[#fffaf3]"] { background-color: #332b3e !important; }
+.dark [class*="bg-[#fffaf0]"] { background-color: #352c43 !important; }
+.dark [class*="bg-[#faf4ed]"] { background-color: #352c43 !important; }
+.dark [class*="bg-[#f4eee9]"] { background-color: #332b3e !important; }
+.dark [class*="bg-[#fff5d8]"],
+.dark [class*="bg-[#fff1c8]"] { background-color: #4b3c24 !important; }
+.dark [class*="bg-[#ffe3df]"],
+.dark [class*="bg-[#ffe2e1]"] { background-color: #4a2935 !important; }
+.dark [class*="bg-[#d8f5e5]"] { background-color: #214237 !important; }
+.dark [class*="bg-[#b9f2d0]"] { background-color: #1e4c3a !important; }
+.dark [class*="bg-[#f1e7df]"] { background-color: #44394a !important; }
+
+.dark [class*="text-[#30283d]"] { color: #fff9ee !important; }
+.dark [class*="text-[#566b2f]"] { color: #b4c985 !important; }
+.dark [class*="text-[#4f455b]"],
+.dark [class*="text-[#584d62]"],
+.dark [class*="text-[#655b72]"],
+.dark [class*="text-[#706475]"],
+.dark [class*="text-[#74636b]"],
+.dark [class*="text-[#766a78]"],
+.dark [class*="text-[#817583]"],
+.dark [class*="text-[#857986]"],
+.dark [class*="text-[#8b8093]"],
+.dark [class*="text-[#8d818d]"],
+.dark [class*="text-[#8e828d]"],
+.dark [class*="text-[#8f838e]"],
+.dark [class*="text-[#918591]"],
+.dark [class*="text-[#928691]"],
+.dark [class*="text-[#958894]"],
+.dark [class*="text-[#968a91]"],
+.dark [class*="text-[#968b99]"],
+.dark [class*="text-[#988d95]"],
+.dark [class*="text-[#9a8e98]"],
+.dark [class*="text-[#9c9099]"],
+.dark [class*="text-[#9d91a0]"],
+.dark [class*="text-[#a2979d]"],
+.dark [class*="text-[#b0a2aa]"],
+.dark [class*="text-[#b2a5ab]"] { color: #cfc3d2 !important; }
+.dark [class*="text-[#76591a]"],
+.dark [class*="text-[#806116]"],
+.dark [class*="text-[#88681b]"] { color: #ffd66b !important; }
+.dark [class*="text-[#1d5f49]"],
+.dark [class*="text-[#267452]"],
+.dark [class*="text-[#2f9b6c]"],
+.dark [class*="text-[#43816a]"] { color: #b9f2d0 !important; }
+.dark [class*="text-[#a44c53]"],
+.dark [class*="text-[#bf4250]"],
+.dark [class*="text-[#c34151]"],
+.dark [class*="text-[#d44356]"] { color: #ff9ca4 !important; }
+.dark input::placeholder { color: #a99caf; }
+
+.dark [class*="border-[#e1d8d4]"],
+.dark [class*="border-[#e4d9d3]"],
+.dark [class*="border-[#eee4dc]"] { border-color: #4b4056 !important; }
+.dark [class*="border-[#edb9a9]"] { border-color: #9b5d5a !important; }
+.dark [class*="border-[#8da253]"] { border-color: #71863d !important; }
+.dark [class*="border-[#70c39c]"] { border-color: #4d9b78 !important; }
+.dark [class*="hover:bg-[#fffaf0]"]:hover { background-color: #352c43 !important; }
+.dark [class*="hover:bg-[#d8f5e5]"]:hover { background-color: #2b5144 !important; }
+.dark [class*="hover:text-[#30283d]"]:hover { color: #fff9ee !important; }
+.dark .noise::after { opacity: .05; }
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+  z-index: 20;
+}
+.pop-in { animation: pop-in .45s cubic-bezier(.2,.9,.25,1.1) both; }
+.rise-in { animation: rise-in .6s cubic-bezier(.2,.8,.2,1) both; }
+.delay-1 { animation-delay: .08s; }
+.delay-2 { animation-delay: .16s; }
+.delay-3 { animation-delay: .24s; }
+.shake { animation: shake .36s ease-in-out; }
+.flash-good { animation: flash-good .5s ease-out; }
+@keyframes pop-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes flash-good { 0% { background-color: hsl(var(--secondary)); } 100% { background-color: transparent; } }

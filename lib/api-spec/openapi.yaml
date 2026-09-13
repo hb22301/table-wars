@@ -1,0 +1,311 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: leaderboard
+    description: Shared leaderboard operations
+  - name: feedback
+    description: Player feedback operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /creator/access:
+    get:
+      operationId: checkCreatorAccess
+      tags: [leaderboard]
+      summary: Check whether the signed-in user is the approved creator
+      responses:
+        "200":
+          description: Creator access granted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatorAccess"
+        "401":
+          description: Sign-in required
+        "403":
+          description: Creator access required
+  /feedback:
+    post:
+      operationId: submitFeedback
+      tags: [feedback]
+      summary: Submit feedback for the creator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackInput"
+      responses:
+        "201":
+          description: Feedback submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackMessage"
+        "400":
+          description: Invalid feedback
+        "500":
+          description: Server error
+  /creator/feedback:
+    get:
+      operationId: listCreatorFeedback
+      tags: [feedback]
+      summary: List feedback for the creator
+      responses:
+        "200":
+          description: Feedback submitted by players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FeedbackMessage"
+        "401":
+          description: Sign-in required
+        "403":
+          description: Creator access required
+        "500":
+          description: Server error
+  /creator/feedback/{id}:
+    delete:
+      operationId: deleteCreatorFeedback
+      tags: [feedback]
+      summary: Delete feedback as the creator
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Feedback deleted
+        "401":
+          description: Sign-in required
+        "403":
+          description: Creator access required
+        "404":
+          description: Feedback not found
+        "500":
+          description: Server error
+  /leaderboard:
+    get:
+      operationId: listLeaderboard
+      tags: [leaderboard]
+      summary: List the shared leaderboard
+      responses:
+        "200":
+          description: Shared leaderboard entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+        "500":
+          description: Server error
+    post:
+      operationId: submitLeaderboardEntry
+      tags: [leaderboard]
+      summary: Submit a completed run to the shared leaderboard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLeaderboardEntryBody"
+      responses:
+        "200":
+          description: Existing or newly saved leaderboard entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaderboardEntry"
+        "400":
+          description: Invalid leaderboard entry
+        "422":
+          description: Completed run does not meet the minimum leaderboard accuracy
+        "500":
+          description: Server error
+  /leaderboard/all-time:
+    get:
+      operationId: listAllTimeLeaderboard
+      tags: [leaderboard]
+      summary: List the all-time shared leaderboard
+      responses:
+        "200":
+          description: All-time shared leaderboard entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+        "500":
+          description: Server error
+  /leaderboard/{id}:
+    delete:
+      operationId: deleteLeaderboardEntry
+      tags: [leaderboard]
+      summary: Delete a leaderboard entry as the creator
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Leaderboard entry deleted
+        "401":
+          description: Sign-in required
+        "403":
+          description: Creator access required
+        "404":
+          description: Leaderboard entry not found
+        "500":
+          description: Server error
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    CreatorAccess:
+      type: object
+      properties:
+        authorized:
+          type: boolean
+      required:
+        - authorized
+    FeedbackMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: ["string", "null"]
+        message:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - message
+        - createdAt
+    FeedbackInput:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 80
+        message:
+          type: string
+          minLength: 1
+          maxLength: 2000
+      required:
+        - message
+    LeaderboardEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        playerName:
+          type: string
+        score:
+          type: integer
+        accuracy:
+          type: integer
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 3
+        tableFrom:
+          type: integer
+        tableTo:
+          type: integer
+        playedAt:
+          type: string
+        correctCount:
+          type: integer
+        totalQuestions:
+          type: integer
+      required:
+        - id
+        - playerName
+        - score
+        - accuracy
+        - difficulty
+        - tableFrom
+        - tableTo
+        - playedAt
+        - correctCount
+        - totalQuestions
+    CreateLeaderboardEntryBody:
+      type: object
+      properties:
+        runId:
+          type: string
+        playerName:
+          type: string
+          minLength: 1
+          maxLength: 80
+        score:
+          type: integer
+        accuracy:
+          type: integer
+          minimum: 0
+          maximum: 100
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 3
+        tableFrom:
+          type: integer
+          minimum: 2
+          maximum: 20
+        tableTo:
+          type: integer
+          minimum: 2
+          maximum: 20
+        correctCount:
+          type: integer
+          minimum: 0
+        totalQuestions:
+          type: integer
+          minimum: 0
+      required:
+        - runId
+        - playerName
+        - score
+        - accuracy
+        - difficulty
+        - tableFrom
+        - tableTo
+        - correctCount
+        - totalQuestions
+

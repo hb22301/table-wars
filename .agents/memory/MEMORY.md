@@ -1,0 +1,3 @@
+- [Hosted analytics](analytics.md) — Custom events use a no-op-safe client wrapper because Replit injects the tracker only on published web deployments.
+- [Timer synchronization](timing.md) — The question bar and countdown must derive from one monotonic deadline, not separate CSS and interval clocks.
+- [Clerk browser regression tests](clerk-e2e.md) — Use Clerk's Playwright helper instead of manually reproducing development-domain cookies.

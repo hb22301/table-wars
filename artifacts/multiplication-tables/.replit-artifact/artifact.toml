@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Multiplication Tables"
+description = "A focused multiplication practice game for tables 2 through 20, with configurable difficulty, timed questions, scoring rules, player names, and a persistent leaderboard."
+version = "1.0.0"
+id = "artifacts/multiplication-tables"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25130
+
+[services.development]
+run = "pnpm --filter @workspace/multiplication-tables run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/multiplication-tables", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/multiplication-tables/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25130"
+BASE_PATH = "/"
